@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+  // Activa las animaciones de aparición SOLO si el JS está funcionando.
+  // Si script.js no llega a ejecutarse (fallo de red/caché), a los 3 segundos
+  // se muestra todo el contenido estático sin animación.
+  (function () {
+    var d = document.documentElement;
+    d.classList.add("js");
+    window.__revealFallback = setTimeout(function () {
+      d.classList.remove("js");
+    }, 3000);
+  })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>Plataforma de Capacitaciones · Municipalidad de Las Toscas</title>
+  <meta name="description" content="Clases grabadas y capacitaciones en vivo, gratuitas y con certificado oficial, para vecinos de Las Toscas, Santa Fe. Aprendé a tu ritmo, desde tu celular o PC." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z' fill='%231d4ed8'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#cursos">Saltar al catálogo de capacitaciones</a>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Municipalidad de Las Toscas · Inicio">
+        <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3b82f6" />
+              <stop offset="1" stop-color="#1e3a8a" />
+            </linearGradient>
+          </defs>
+          <path d="M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z" fill="url(#lg)" />
+          <text x="24" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Segoe UI, Arial, sans-serif">LT</text>
+          <path d="M14 32.5c3.2 3.5 6.7 5.6 10 6.6 3.3-1 6.8-3.1 10-6.6" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round" />
+        </svg>
+        <span class="brand-text">
+          <span class="brand-top">Municipalidad de Las Toscas</span>
+          <span class="brand-sub">Plataforma de Capacitaciones</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#cursos">Capacitaciones</a>
+        <a href="#pasos">Cómo funciona</a>
+        <a href="#preguntas">Preguntas</a>
+        <a href="#contacto">Contacto</a>
+        <button class="btn btn-primary nav-cta" data-open-modal>Inscribirme</button>
+      </nav>
+
+      <button class="btn btn-primary header-cta" data-open-modal>Inscribirme</button>
+
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="inicio">
+      <div class="hero-blobs" aria-hidden="true">
+        <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+      </div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="hero-badge">🎬 Nueva plataforma de capacitaciones · Ciclo 2026</span>
+          <h1>Capacitate <span class="grad-text">a tu ritmo</span>, cuando y donde quieras</h1>
+          <p class="hero-sub">
+            Clases <strong>grabadas 24/7</strong> para mirar desde tu celular o PC, encuentros <strong>en vivo</strong> con
+            instructores locales y certificación oficial. Todo <strong>gratuito</strong>, para vecinas y vecinos de Las Toscas.
+          </p>
+          <div class="hero-actions">
+            <a href="#cursos" class="btn btn-primary btn-lg">Explorar capacitaciones</a>
+            <button class="btn btn-ghost btn-lg" data-open-modal>Inscribirme ahora</button>
+          </div>
+          <ul class="hero-points">
+            <li><span class="pt" aria-hidden="true">✓</span>Clases 24/7</li>
+            <li><span class="pt" aria-hidden="true">✓</span>Certificado oficial</li>
+            <li><span class="pt" aria-hidden="true">✓</span>100% gratuito</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="player-card">
+            <div class="player-thumb">
+              <span class="player-emoji">⚡</span>
+              <span class="play-btn">▶</span>
+              <div class="player-bottom">
+                <div class="player-bar"><span style="width:42%"></span></div>
+                <div class="player-times"><span>14:32</span><span>34:10</span></div>
+              </div>
+            </div>
+            <div class="player-info">
+              <strong>Electricidad Domiciliaria</strong>
+              <span class="player-lesson">Clase 8 de 24 · Seguridad eléctrica</span>
+              <div class="player-progress"><span style="width:42%"></span></div>
+              <span class="player-note">42% completado · seguí donde lo dejaste</span>
+            </div>
+          </div>
+          <span class="lesson-chip lc1">✅ Instalaciones básicas</span>
+          <span class="lesson-chip lc2">▶ Ahora: tableros y llaves</span>
+          <span class="lesson-chip lc3">🔒 Evaluación final</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ESTADÍSTICAS ================= -->
+    <section class="stats-wrap" aria-label="Datos del programa">
+      <div class="container">
+        <div class="stats-card">
+          <div class="stat">
+            <strong class="stat-num" data-target="180" data-prefix="+">0</strong>
+            <span class="stat-label">Clases grabadas</span>
+          </div>
+          <div class="stat">
+            <strong class="stat-num" data-target="90" data-prefix="+">0</strong>
+            <span class="stat-label">Horas de video</span>
+          </div>
+          <div class="stat">
+            <strong class="stat-num" data-target="5">0</strong>
+            <span class="stat-label">En vivo este mes</span>
+          </div>
+          <div class="stat">
+            <strong class="stat-num" data-target="2400" data-prefix="+">0</strong>
+            <span class="stat-label">Vecinos capacitados</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTINUAR APRENDIENDO ================= -->
+    <section class="section continue-section" id="continuar">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">👨‍🎓 Tu aprendizaje</span>
+          <h2>Continuar <span class="highlight">aprendiendo</span></h2>
+          <p>Retomá tus capacitaciones justo donde las dejaste. La plataforma recuerda tu avance.</p>
+        </div>
+        <div class="continue-grid" id="continueGrid"></div>
+      </div>
+    </section>
+
+    <!-- ================= CATÁLOGO DE CAPACITACIONES ================= -->
+    <section class="section" id="cursos">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">📚 Catálogo 2026</span>
+          <h2>Elegí tu próxima <span class="highlight">capacitación</span></h2>
+          <p>Clases grabadas para mirar cuando quieras y capacitaciones en vivo con fecha. Todo gratuito y con certificado.</p>
+        </div>
+
+        <div class="toolbar reveal">
+          <div class="modality-toggle" id="modalityToggle" role="group" aria-label="Filtrar por modalidad">
+            <button class="mod-btn active" data-mod="todos">Todas</button>
+            <button class="mod-btn" data-mod="grabado"><span aria-hidden="true">🎬</span> Grabadas</button>
+            <button class="mod-btn" data-mod="vivo"><span aria-hidden="true">📡</span> En vivo</button>
+          </div>
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input type="search" id="searchInput" placeholder="Buscar capacitación… ej.: panadería, electricidad" aria-label="Buscar capacitación" />
+          </div>
+          <div class="chips" id="filterChips" role="group" aria-label="Filtrar por categoría"></div>
+        </div>
+
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
+
+        <div class="grid" id="courseGrid"></div>
+
+        <div class="no-results" id="noResults" hidden>
+          <span class="nr-emoji" aria-hidden="true">🔍</span>
+          <h3>No encontramos capacitaciones</h3>
+          <p>Probá con otra búsqueda o mirá todas las categorías y modalidades.</p>
+          <button class="btn btn-outline" id="resetFilters">Limpiar filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CÓMO INSCRIBIRSE ================= -->
+    <section class="section pasos-section" id="pasos">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">🚀 Simple y sin vueltas</span>
+          <h2>Así <span class="highlight">funciona</span></h2>
+          <p>Pensado para aprender desde el celular, en tu casa y a tu ritmo.</p>
+        </div>
+
+        <div class="steps">
+          <article class="step reveal">
+            <span class="step-num" aria-hidden="true">01</span>
+            <span class="step-icon" aria-hidden="true">🎬</span>
+            <h3>Elegí tu capacitación</h3>
+            <p>Mirá el catálogo: clases grabadas disponibles 24/7 o encuentros en vivo con fecha.</p>
+          </article>
+          <article class="step reveal">
+            <span class="step-num" aria-hidden="true">02</span>
+            <span class="step-icon" aria-hidden="true">✍️</span>
+            <h3>Inscribite gratis</h3>
+            <p>Completá el formulario con tu DNI y un correo. En dos minutos ya sos parte.</p>
+          </article>
+          <article class="step reveal">
+            <span class="step-num" aria-hidden="true">03</span>
+            <span class="step-icon" aria-hidden="true">🏆</span>
+            <h3>Aprendé y certificá</h3>
+            <p>Mirá las clases a tu ritmo, rendí la evaluación final y descargá tu certificado.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PREGUNTAS FRECUENTES ================= -->
+    <section class="section" id="preguntas">
+      <div class="container container-narrow">
+        <div class="section-head reveal">
+          <span class="eyebrow">❓ Preguntas frecuentes</span>
+          <h2>Resolvemos tus <span class="highlight">dudas</span></h2>
+          <p>Si tenés otra consulta, escribinos por WhatsApp o acercate a la Sede Municipal.</p>
+        </div>
+
+        <div class="faq-list reveal">
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Las clases son grabadas o en vivo?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>Ambas. La mayoría de las capacitaciones son grabadas: las mirás cuando quieras y las veces que necesites. También hay encuentros en vivo con fecha, que quedan grabados por si no podés asistir.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Qué necesito para ver las clases?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>Un celular, tablet o PC con internet. Los videos son livianos y se adaptan a tu conexión. No hace falta instalar nada: todo funciona desde el navegador.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Cuánto tiempo tengo para completar el curso?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>Tenés acceso durante todo el ciclo 2026. Avanzás a tu ritmo, sin plazos ni apuros: la plataforma recuerda dónde dejaste cada clase.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Los encuentros en vivo son obligatorios?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>No. Todos los encuentros se graban y quedan disponibles en la plataforma. Igual recomendamos asistir en directo para hacer consultas al instructor.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Se entrega certificado?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>Sí. Al completar todas las clases y aprobar la evaluación final (75%) descargás un certificado oficial de la Municipalidad de Las Toscas, con validez laboral.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>¿Cuánto cuesta? ¿Puedo hacer más de una?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a"><p>Nada: todo es 100% gratuito para vecinas y vecinos de Las Toscas. Y sí, podés inscribirte en todas las capacitaciones que quieras, incluso combinando grabadas y en vivo.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA FINAL ================= -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="cta-inner reveal">
+          <div>
+            <h2>¿Listo para empezar?</h2>
+            <p>Los cupos son limitados y se asignan por orden de inscripción. ¡No te quedes afuera!</p>
+          </div>
+          <button class="btn btn-white btn-lg" data-open-modal>Inscribirme gratis</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer" id="contacto">
+    <div class="container footer-grid">
+      <div class="f-col f-brand">
+        <a class="brand" href="#inicio" aria-label="Volver arriba">
+          <svg viewBox="0 0 48 48" width="38" height="38" aria-hidden="true">
+            <defs>
+              <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3b82f6" />
+                <stop offset="1" stop-color="#1e3a8a" />
+              </linearGradient>
+            </defs>
+            <path d="M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z" fill="url(#lg2)" />
+            <text x="24" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Segoe UI, Arial, sans-serif">LT</text>
+            <path d="M14 32.5c3.2 3.5 6.7 5.6 10 6.6 3.3-1 6.8-3.1 10-6.6" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+          <span class="brand-text">
+            <span class="brand-top">Municipalidad de Las Toscas</span>
+            <span class="brand-sub">Santa Fe · Argentina</span>
+          </span>
+        </a>
+        <p class="f-desc">Plataforma municipal de formación laboral: clases grabadas y capacitaciones en vivo, gratuitas y con certificado oficial.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook de la Municipalidad">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.7-1.6h1.5V4.2c-.3 0-1.3-.2-2.4-.2-2.4 0-4 1.5-4 4.2v2.6H7.5V14h2.8v8h3.2z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram de la Municipalidad">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.3c2.5 0 2.8 0 3.8.1 1 0 1.5.2 1.8.3.5.2.8.4 1.1.7.3.3.5.6.7 1.1.1.3.3.8.3 1.8.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c0 1-.2 1.5-.3 1.8-.2.5-.4.8-.7 1.1-.3.3-.6.5-1.1.7-.3.1-.8.3-1.8.3-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-1 0-1.5-.2-1.8-.3-.5-.2-.8-.4-1.1-.7-.3-.3-.5-.6-.7-1.1-.1-.3-.3-.8-.3-1.8-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c0-1 .2-1.5.3-1.8.2-.5.4-.8.7-1.1.3-.3.6-.5 1.1-.7.3-.1.8-.3 1.8-.3 1-.1 1.3-.1 3.8-.1M12 2.6c-2.6 0-2.9 0-3.9.1-1 0-1.7.2-2.3.4-.6.3-1.2.6-1.7 1.1-.5.5-.9 1.1-1.1 1.7-.2.6-.4 1.3-.4 2.3-.1 1-.1 1.3-.1 3.9s0 2.9.1 3.9c0 1 .2 1.7.4 2.3.3.6.6 1.2 1.1 1.7.5.5 1.1.9 1.7 1.1.6.2 1.3.4 2.3.4 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c1 0 1.7-.2 2.3-.4.6-.3 1.2-.6 1.7-1.1.5-.5.9-1.1 1.1-1.7.2-.6.4-1.3.4-2.3.1-1 .1-1.3.1-3.9s0-2.9-.1-3.9c0-1-.2-1.7-.4-2.3-.3-.6-.6-1.2-1.1-1.7-.5-.5-1.1-.9-1.7-1.1-.6-.2-1.3-.4-2.3-.4-1-.1-1.3-.1-3.9-.1zm0 4.6a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM18.2 7a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z"/></svg>
+          </a>
+          <a href="#" aria-label="X de la Municipalidad">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4.3l4 5.5L17 4h3l-6.4 7.6L20.5 20h-4.3l-4.3-6-5 6H4l6.9-8.2L4 4z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <nav class="f-col" aria-label="Cursos destacados">
+        <h4>Capacitaciones destacadas</h4>
+        <a href="#cursos">⚡ Electricidad Domiciliaria</a>
+        <a href="#cursos">🥐 Panadería y Repostería</a>
+        <a href="#cursos">💻 Programación Web Inicial</a>
+        <a href="#cursos">🩺 Auxiliar de Enfermería</a>
+        <a href="#cursos">🌱 Huerta Orgánica Familiar</a>
+      </nav>
+
+      <div class="f-col">
+        <h4>Contacto</h4>
+        <ul class="f-contact">
+          <li><span aria-hidden="true">📍</span> Sede Municipal · Centro Cívico, Las Toscas, Santa Fe</li>
+          <li><span aria-hidden="true">📞</span> (03482) 40-2000 <em>(línea demo)</em></li>
+          <li><span aria-hidden="true">✉️</span> capacitaciones@lastoscas.gob.ar</li>
+          <li><span aria-hidden="true">🕗</span> Lunes a viernes · 8 a 13 h</li>
+        </ul>
+      </div>
+
+      <div class="f-col">
+        <h4>Área a cargo</h4>
+        <p class="f-note">Secretaría de Desarrollo Humano y Promoción Local — Área de Empleo y Capacitación.</p>
+        <p class="f-note">Consultá también en la Oficina de Empleo de tu localidad.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© <span id="year">2026</span> Municipalidad de Las Toscas · Santa Fe, Argentina</p>
+        <p class="mock-note">Sitio demostrativo (mock) — los cursos, horarios y contactos mostrados son datos de ejemplo.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= PANTALLA DE REPRODUCCIÓN ================= -->
+  <div class="player-screen" id="playerScreen" hidden>
+    <header class="ps-header">
+      <button class="ps-back" id="psBack">← Volver al catálogo</button>
+      <div class="ps-title-box">
+        <span class="ps-crumb" id="psCrumb"></span>
+        <strong id="psCourse"></strong>
+      </div>
+      <div class="ps-progress-box">
+        <div class="ps-progress-bar" aria-hidden="true"><span id="psProgress"></span></div>
+        <span class="ps-progress-text" id="psProgressText">0% completado</span>
+      </div>
+    </header>
+
+    <div class="ps-layout">
+      <div class="ps-main">
+        <div class="ps-video" id="psVideo">
+          <div class="ps-video-bg" aria-hidden="true"><span id="psEmoji">⚡</span></div>
+          <span class="ps-watermark" aria-hidden="true">🖥️ Capacita Las Toscas</span>
+          <button class="ps-big-play" id="psBigPlay" aria-label="Reproducir clase">▶</button>
+          <div class="ps-controls">
+            <button id="psPlay" aria-label="Reproducir o pausar">▶</button>
+            <span class="ps-time" id="psTime">0:00 / 0:00</span>
+            <div class="ps-seek" id="psSeek" aria-label="Barra de progreso"><span id="psSeekFill"></span></div>
+            <button id="psMute" aria-label="Silenciar">🔊</button>
+            <button id="psSpeed" class="ps-speed" aria-label="Velocidad de reproducción">1x</button>
+            <button id="psFull" aria-label="Pantalla completa">⛶</button>
+          </div>
+        </div>
+
+        <div class="ps-lesson-info">
+          <div class="ps-lesson-titles">
+            <span class="ps-lesson-crumb" id="psLessonCrumb"></span>
+            <h3 id="psLessonTitle"></h3>
+          </div>
+          <div class="ps-actions">
+            <button class="btn btn-outline btn-sm" id="psPrev">‹ Anterior</button>
+            <button class="btn btn-primary btn-sm" id="psComplete">✓ Marcar como completada</button>
+            <button class="btn btn-outline btn-sm" id="psNext">Siguiente ›</button>
+          </div>
+        </div>
+        <p class="ps-note">🔒 Demo: el video es simulado. En la plataforma real, acá se reproduce la clase con subtítulos y descarga offline.</p>
+      </div>
+
+      <aside class="ps-playlist">
+        <h4>📚 Contenido del curso</h4>
+        <ul id="psList"></ul>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ================= MODAL DE DETALLE DE CAPACITACIÓN ================= -->
+  <div class="modal-overlay" id="detailOverlay" hidden>
+    <div class="modal detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="modal-close" data-close-modal aria-label="Cerrar detalle">×</button>
+
+      <div class="detail-head" id="detailHead">
+        <span class="detail-icon" id="detailIcon" aria-hidden="true">⚡</span>
+        <div>
+          <span class="badge grabado" id="detailBadge">🎬 Grabado</span>
+          <h3 id="detailTitle">Capacitación</h3>
+          <p class="detail-cat" id="detailCat"></p>
+        </div>
+      </div>
+
+      <div class="detail-meta" id="detailMeta"></div>
+      <p class="detail-desc" id="detailDesc"></p>
+
+      <h4 class="detail-sub">📚 Contenido de la capacitación</h4>
+      <ul class="curriculum" id="detailCurriculum"></ul>
+
+      <div class="detail-foot" id="detailFoot"></div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL DE INSCRIPCIÓN ================= -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" data-close-modal aria-label="Cerrar formulario">×</button>
+
+      <div class="modal-head">
+        <span class="modal-emoji" aria-hidden="true">🎓</span>
+        <h3 id="modalTitle">Formulario de inscripción</h3>
+        <p>Completá tus datos y nos pondremos en contacto para confirmar tu vacante.</p>
+      </div>
+
+      <form id="enrollForm" novalidate>
+        <div class="field">
+          <label for="fCourse">Capacitación *</label>
+          <select id="fCourse">
+            <option value="">Seleccioná una capacitación…</option>
+          </select>
+          <small class="err">Elegí la capacitación que querés hacer.</small>
+        </div>
+
+        <div class="field">
+          <label for="fName">Nombre y apellido *</label>
+          <input type="text" id="fName" autocomplete="name" placeholder="Ej.: María González" />
+          <small class="err">Ingresá tu nombre y apellido (solo letras).</small>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="fDni">DNI *</label>
+            <input type="tel" id="fDni" inputmode="numeric" placeholder="Sin puntos · Ej.: 35123456" />
+            <small class="err">El DNI debe tener 7 u 8 dígitos.</small>
+          </div>
+          <div class="field">
+            <label for="fPhone">Teléfono / WhatsApp *</label>
+            <input type="tel" id="fPhone" inputmode="tel" placeholder="Ej.: 3482456789" />
+            <small class="err">Ingresá al menos 10 dígitos.</small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fEmail">Correo electrónico *</label>
+          <input type="email" id="fEmail" autocomplete="email" placeholder="tucorreo@mail.com" />
+          <small class="err">Ingresá un correo electrónico válido.</small>
+        </div>
+
+        <div class="field">
+          <label class="chk">
+            <input type="checkbox" id="fTerms" />
+            <span>Acepto que la Municipalidad me contacte para gestionar mi inscripción. *</span>
+          </label>
+          <small class="err">Necesitamos tu consentimiento para poder contactarte.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Confirmar inscripción</button>
+        <p class="form-note">🔒 Demo: los datos no se envían a ningún servidor.</p>
+      </form>
+
+      <div class="success-panel" id="successPanel" hidden>
+        <div class="success-icon" aria-hidden="true">🎉</div>
+        <h4>¡Inscripción registrada!</h4>
+        <p id="successMsg"></p>
+        <button class="btn btn-primary" data-close-modal>Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <button class="to-top" id="toTop" aria-label="Volver arriba">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
