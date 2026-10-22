@@ -291,7 +291,9 @@ function renderContinue() {
           '<div class="cont-progress" aria-hidden="true"><span style="width:' + up.percent + '%"></span></div>' +
           '<span class="cont-note">' + up.percent + "% completado · " + up.remaining + "</span>" +
         "</div>" +
-        '<button class="btn btn-primary btn-sm">Continuar</button>' +
+        '<button class="btn ' + (up.percent >= 100 ? "btn-outline" : "btn-primary") + ' btn-sm">' +
+          (up.percent >= 100 ? "🎓 Certificado" : "Continuar") +
+        "</button>" +
       "</article>"
     );
   }).join("");
@@ -375,12 +377,13 @@ function showOverlay(ov) {
 function hideOverlay(ov) {
   ov.classList.remove("show");
   setTimeout(function () { ov.hidden = true; }, 260);
-  document.body.style.overflow = "";
+  // Si el reproductor quedó abierto debajo, mantenemos el scroll bloqueado
+  if (playerScreen.hidden) document.body.style.overflow = "";
 }
 
 /* Cierre con Escape + trampa de foco para accesibilidad */
 document.addEventListener("keydown", function (e) {
-  const ov = !overlay.hidden ? overlay : !detailOverlay.hidden ? detailOverlay : null;
+  const ov = !overlay.hidden ? overlay : !detailOverlay.hidden ? detailOverlay : !certOverlay.hidden ? certOverlay : null;
   if (!ov) return;
   if (e.key === "Escape") { hideOverlay(ov); return; }
   if (e.key === "Tab") {
@@ -394,7 +397,8 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-/* Cerrar tocando el fondo oscuro */
+/* Cerrar tocando el fondo oscuro (certOverlay se registra en su propio módulo,
+   porque se declara más adelante en este archivo) */
 [overlay, detailOverlay].forEach(function (ov) {
   ov.addEventListener("mousedown", function (e) {
     if (e.target === ov) hideOverlay(ov);
@@ -482,7 +486,7 @@ function openModal(courseId) {
 /* ---------- Delegación global de clics ---------- */
 document.addEventListener("click", function (e) {
   if (e.target.closest("[data-close-modal]")) {
-    [overlay, detailOverlay].forEach(function (ov) { if (!ov.hidden) hideOverlay(ov); });
+    [overlay, detailOverlay, certOverlay].forEach(function (ov) { if (!ov.hidden) hideOverlay(ov); });
     return;
   }
   if (e.target.closest("[data-open-modal]")) { openModal(); return; }
@@ -509,10 +513,13 @@ $("#courseGrid").addEventListener("click", function (e) {
   if (card) openDetail(card.dataset.detail);
 });
 
-/* Click en "Continuar aprendiendo" → abre el reproductor */
+/* Click en "Continuar aprendiendo" → reproductor, o certificado si ya terminó */
 $("#continueGrid").addEventListener("click", function (e) {
   const card = e.target.closest("[data-detail]");
-  if (card) openPlayer(card.dataset.detail);
+  if (!card) return;
+  const up = USER_PROGRESS[card.dataset.detail];
+  if (up && up.percent >= 100) openCertificate(card.dataset.detail);
+  else openPlayer(card.dataset.detail);
 });
 
 /* ---------- Validación del formulario ---------- */
@@ -561,6 +568,8 @@ form.addEventListener("submit", function (e) {
     showToast("Revisá los campos marcados en rojo ⚠️");
     return;
   }
+  // Recordamos el nombre para el certificado
+  try { localStorage.setItem("capName", $("#fName").value.trim()); } catch (err) {}
   const btn = $("#submitBtn");
   btn.disabled = true;
   btn.textContent = "Enviando…";
@@ -759,6 +768,7 @@ function renderPlayer() {
   $("#psComplete").textContent = P.completed[P.current] ? "✓ Completada" : "✓ Marcar como completada";
   $("#psPrev").disabled = P.current === 0;
   $("#psNext").disabled = P.current === P.lessons.length - 1;
+  $("#psCertBtn").hidden = done < P.lessons.length; // visible con el curso al 100%
   renderPsTime();
 }
 
@@ -814,7 +824,8 @@ function completePs(auto) {
   } else {
     pausePs();
     renderPlayer();
-    showToast("🎓 ¡Curso completado! Ya podés descargar tu certificado (demo).");
+    showToast("🎓 ¡Curso completado! Generá tu certificado ↓");
+    setTimeout(function () { openCertificate(P.course.id); }, 800);
   }
 }
 
@@ -846,6 +857,7 @@ $("#psFull").addEventListener("click", function () {
 $("#psPrev").addEventListener("click", function () { goToLesson(P.current - 1, P.playing); });
 $("#psNext").addEventListener("click", function () { goToLesson(P.current + 1, P.playing); });
 $("#psComplete").addEventListener("click", function () { completePs(false); });
+$("#psCertBtn").addEventListener("click", function () { if (P) openCertificate(P.course.id); });
 
 /* Click en un módulo de la playlist → cambia de clase */
 $("#psList").addEventListener("click", function (e) {
@@ -856,6 +868,220 @@ $("#psList").addEventListener("click", function (e) {
 /* Escape cierra el reproductor */
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape" && !playerScreen.hidden) closePlayer();
+});
+
+/* ============================================================
+   CERTIFICADO DESCARGABLE — se dibuja en Canvas, en el
+   propio navegador (sin servidores ni dependencias)
+   ============================================================ */
+const certOverlay = $("#certOverlay");
+const certCanvas = document.createElement("canvas");
+certCanvas.width = 1600;
+certCanvas.height = 1131;
+const certCtx = certCanvas.getContext("2d");
+let CERT = { course: null };
+let certDebounce = null;
+
+/* Cerrar tocando el fondo oscuro */
+certOverlay.addEventListener("mousedown", function (e) {
+  if (e.target === certOverlay) hideOverlay(certOverlay);
+});
+
+function certText(txt, x, y, font, color, align, spacing) {
+  certCtx.font = font;
+  certCtx.fillStyle = color;
+  certCtx.textAlign = align || "center";
+  if ("letterSpacing" in certCtx) certCtx.letterSpacing = (spacing || 0) + "px";
+  certCtx.fillText(txt, x, y);
+  if ("letterSpacing" in certCtx) certCtx.letterSpacing = "0px";
+}
+
+function certWrap(txt, maxW) {
+  const words = String(txt).split(" ");
+  const lines = [];
+  let line = "";
+  words.forEach(function (w) {
+    const t = line ? line + " " + w : w;
+    if (certCtx.measureText(t).width > maxW && line) { lines.push(line); line = w; }
+    else line = t;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+function certRoundRect(x, y, w, h, r) {
+  const c = certCtx;
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r);
+  c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+}
+
+function certCode(c, name) {
+  const base = (c.id || "curso") + "|" + (name || "") + "|" + new Date().getFullYear();
+  let h = 0;
+  for (let i = 0; i < base.length; i++) h = (h * 31 + base.charCodeAt(i)) >>> 0;
+  return "LT-" + new Date().getFullYear() + "-" + ("0000000" + h.toString(36).toUpperCase()).slice(-7);
+}
+
+function renderCertificate(name) {
+  const c = CERT.course;
+  if (!c) return;
+  const ctx = certCtx;
+  const W = certCanvas.width, H = certCanvas.height, cx = W / 2;
+
+  // Fondo
+  ctx.fillStyle = "#fffdf6";
+  ctx.fillRect(0, 0, W, H);
+  let g = ctx.createRadialGradient(130, 100, 10, 130, 100, 430);
+  g.addColorStop(0, "rgba(37,99,235,0.07)"); g.addColorStop(1, "rgba(37,99,235,0)");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 640, 540);
+  g = ctx.createRadialGradient(W - 130, H - 100, 10, W - 130, H - 100, 430);
+  g.addColorStop(0, "rgba(245,158,11,0.09)"); g.addColorStop(1, "rgba(245,158,11,0)");
+  ctx.fillStyle = g; ctx.fillRect(W - 640, H - 540, 640, 540);
+
+  // Marcos doble (azul + dorado) con diamantes en las esquinas
+  ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 10;
+  certRoundRect(34, 34, W - 68, H - 68, 26); ctx.stroke();
+  ctx.strokeStyle = "rgba(217,161,59,0.9)"; ctx.lineWidth = 2.5;
+  certRoundRect(58, 58, W - 116, H - 116, 18); ctx.stroke();
+  [[58, 58], [W - 58, 58], [58, H - 58], [W - 58, H - 58]].forEach(function (p) {
+    ctx.save(); ctx.translate(p[0], p[1]); ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = "#f59e0b"; ctx.fillRect(-7, -7, 14, 14); ctx.restore();
+  });
+
+  // Escudo municipal
+  (function () {
+    const s = 58, sx = cx, sy = 168;
+    const grad = ctx.createLinearGradient(sx - 50, sy - 70, sx + 50, sy + 70);
+    grad.addColorStop(0, "#3b82f6"); grad.addColorStop(1, "#12275c");
+    ctx.beginPath();
+    ctx.moveTo(sx, sy - s);
+    ctx.lineTo(sx + s * 0.85, sy - s * 0.6);
+    ctx.lineTo(sx + s * 0.85, sy + s * 0.05);
+    ctx.quadraticCurveTo(sx + s * 0.82, sy + s * 0.72, sx, sy + s);
+    ctx.quadraticCurveTo(sx - s * 0.82, sy + s * 0.72, sx - s * 0.85, sy + s * 0.05);
+    ctx.lineTo(sx - s * 0.85, sy - s * 0.6);
+    ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 3; ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(sx - 32, sy + 24);
+    ctx.quadraticCurveTo(sx, sy + 50, sx + 32, sy + 24);
+    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 4; ctx.stroke();
+    certText("LT", sx, sy + 12, "700 32px Georgia, serif", "#ffffff", "center", 1);
+  })();
+
+  // Encabezado
+  certText("MUNICIPALIDAD DE LAS TOSCAS", cx, 292, "800 36px 'Segoe UI', Arial, sans-serif", "#0f2a6b", "center", 4);
+  certText("SANTA FE · ARGENTINA", cx, 324, "600 20px 'Segoe UI', Arial, sans-serif", "#5b6b83", "center", 6);
+  ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx - 150, 352); ctx.lineTo(cx + 150, 352); ctx.stroke();
+  ctx.save(); ctx.translate(cx, 352); ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = "#f59e0b"; ctx.fillRect(-6, -6, 12, 12); ctx.restore();
+
+  // Título
+  certText("CERTIFICADO", cx, 452, "800 88px Georgia, 'Times New Roman', serif", "#0f2a6b", "center", 10);
+  certText("DE FINALIZACIÓN", cx, 498, "700 30px 'Segoe UI', Arial, sans-serif", "#1d4ed8", "center", 8);
+  certText("Se certifica que", cx, 556, "italic 400 28px Georgia, serif", "#5b6b83", "center", 1);
+
+  // Nombre del titular (con filete dorado debajo)
+  const nombre = (name && name.trim().length >= 3 ? name : "Nombre y Apellido").toUpperCase();
+  certCtx.font = "700 64px Georgia, serif";
+  const nLines = certWrap(nombre, 1240).slice(0, 2);
+  let ny = 628;
+  nLines.forEach(function (l) { certText(l, cx, ny, "700 64px Georgia, serif", "#0f172a"); ny += 72; });
+  const fy = ny - 44;
+  const fg = ctx.createLinearGradient(cx - 280, 0, cx + 280, 0);
+  fg.addColorStop(0, "rgba(245,158,11,0)"); fg.addColorStop(0.5, "#f59e0b"); fg.addColorStop(1, "rgba(245,158,11,0)");
+  ctx.strokeStyle = fg; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(cx - 280, fy); ctx.lineTo(cx + 280, fy); ctx.stroke();
+
+  // Capacitación
+  let y = fy + 58;
+  certText("completó satisfactoriamente la capacitación", cx, y, "italic 26px Georgia, serif", "#5b6b83");
+  y += 56;
+  certCtx.font = "800 42px 'Segoe UI', Arial, sans-serif";
+  certWrap(c.title, 1220).slice(0, 2).forEach(function (l) {
+    certText(l, cx, y, "800 42px 'Segoe UI', Arial, sans-serif", "#1d4ed8");
+    y += 50;
+  });
+  y += 2;
+  const horas = c.modality === "En vivo" ? c.duration : c.lessons + " clases · " + c.duration;
+  certText("Nivel " + c.level + "  ·  " + horas + "  ·  Modalidad " + (c.modality === "En vivo" ? "en vivo" : "a tu ritmo"), cx, y, "600 23px 'Segoe UI', Arial, sans-serif", "#5b6b83");
+
+  // Pie: fecha · sello · firma
+  const fecha = "Las Toscas, " + new Date().toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
+  certText(fecha, 150, H - 148, "italic 24px Georgia, serif", "#5b6b83", "left");
+
+  (function () {
+    const sx = cx, sy = H - 168, r = 82;
+    ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx, sy, r - 9, 0, Math.PI * 2);
+    ctx.fillStyle = "#1e3a8a"; ctx.fill();
+    ctx.beginPath(); ctx.arc(sx, sy, r - 24, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(251,191,36,0.85)"; ctx.lineWidth = 1.5; ctx.stroke();
+    certText("★", sx, sy - 14, "34px Georgia, serif", "#fbbf24", "center");
+    certText("LAS TOSCAS", sx, sy + 14, "800 13px 'Segoe UI', Arial", "#ffffff", "center", 2);
+    certText("SANTA FE", sx, sy + 34, "700 11px 'Segoe UI', Arial", "rgba(255,255,255,0.85)", "center", 2);
+  })();
+
+  ctx.strokeStyle = "#9aa9c4"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(W - 460, H - 170); ctx.lineTo(W - 150, H - 170); ctx.stroke();
+  certText("Secretaría de Desarrollo Humano", W - 305, H - 140, "700 20px 'Segoe UI', Arial", "#0f172a");
+  certText("y Promoción Local", W - 305, H - 114, "600 17px 'Segoe UI', Arial", "#5b6b83");
+
+  certText("Código de verificación: " + certCode(c, name) + "  ·  Capacita Las Toscas (demo)", cx, H - 62, "600 18px 'Segoe UI', Arial", "#8ba1c9", "center", 1);
+
+  $("#certImg").src = certCanvas.toDataURL("image/png");
+}
+
+function openCertificate(courseId) {
+  const c = COURSES.find(function (x) { return x.id === courseId; });
+  if (!c) return;
+  CERT.course = c;
+  let guardado = "";
+  try { guardado = localStorage.getItem("capName") || ""; } catch (err) {}
+  $("#certName").value = guardado;
+  $("#certName").closest(".field").classList.remove("invalid");
+  certOverlay.hidden = false;
+  requestAnimationFrame(function () { certOverlay.classList.add("show"); });
+  document.body.style.overflow = "hidden";
+  renderCertificate(guardado);
+}
+
+/* Vista previa en vivo mientras se escribe el nombre */
+$("#certName").addEventListener("input", function () {
+  this.closest(".field").classList.remove("invalid");
+  clearTimeout(certDebounce);
+  const v = this.value;
+  certDebounce = setTimeout(function () { renderCertificate(v); }, 350);
+});
+
+$("#certRegen").addEventListener("click", function () {
+  renderCertificate($("#certName").value);
+});
+
+$("#certDownload").addEventListener("click", function () {
+  const v = $("#certName").value.trim();
+  if (v.length < 3) {
+    $("#certName").closest(".field").classList.add("invalid");
+    showToast("Escribí tu nombre para generar el certificado ⚠️");
+    return;
+  }
+  try { localStorage.setItem("capName", v); } catch (err) {}
+  renderCertificate(v);
+  const a = document.createElement("a");
+  a.href = certCanvas.toDataURL("image/png");
+  a.download = "Certificado - " + CERT.course.title.replace(/[\\/:*?"<>|]/g, "") + ".png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  showToast("🎓 Certificado descargado (demo)");
 });
 
 /* ---------- Inicialización ---------- */

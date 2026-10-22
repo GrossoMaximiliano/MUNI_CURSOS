@@ -485,7 +485,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .mod-btn.active { background: var(--grad-primary); color: #fff; box-shadow: 0 6px 16px rgba(29, 78, 216, 0.3); }
 
 /* ---------- Tarjetas: interacción de detalle ---------- */
-.course-card { cursor: pointer; }
+.course-card { cursor: pointer; min-width: 0; }
 .course-card:hover { box-shadow: var(--shadow-md), 0 0 0 1.5px rgba(29, 78, 216, 0.15); }
 
 /* ---------- Continuar aprendiendo ---------- */
@@ -493,9 +493,14 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .continue-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 .cont-card {
   display: flex; align-items: center; gap: 1rem;
+  min-width: 0; /* clave: permite achicar la tarjeta en la grilla del celu */
   background: #fff; border: 1px solid var(--line); border-radius: 16px;
   padding: 1rem 1.2rem; box-shadow: var(--shadow-sm); cursor: pointer;
   transition: transform 0.25s var(--ease), box-shadow 0.25s;
+}
+@media (max-width: 520px) {
+  .cont-card { flex-wrap: wrap; }
+  .cont-card .btn { margin-left: auto; }
 }
 .cont-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
 .cont-icon { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; font-size: 1.4rem; background: var(--catbg, #eaf1fd); }
@@ -542,9 +547,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
 
 /* ---------- Pantalla de reproducción (player) ---------- */
 .player-screen {
-  position: fixed; inset: 0; z-index: 140;
-  height: 100vh;
-  height: 100dvh; /* móviles: barra de direcciones dinámica */
+  position: fixed; inset: 0; z-index: 140; /* inset solo: se adapta a la barra del celu */
   background: var(--bg); overflow: auto;
   overscroll-behavior: contain;
   display: flex; flex-direction: column;
@@ -580,6 +583,13 @@ html.js .reveal.in { opacity: 1; transform: none; }
   display: grid; grid-template-columns: 1fr; gap: 1.2rem; flex: 1;
   width: min(1200px, 94%); margin: 1.4rem auto 0;
   padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+}
+.ps-layout > * { min-width: 0; } /* evita desbordes horizontales en celu */
+@media (max-width: 959.98px) {
+  .ps-playlist ul { max-height: none; } /* en celu la lista fluye completa */
+}
+@media (max-width: 480px) {
+  .ps-controls { gap: 0.45rem; padding: 0.7rem 0.8rem; }
 }
 .ps-video {
   position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden;
@@ -654,6 +664,21 @@ html.js .reveal.in { opacity: 1; transform: none; }
 @media (min-width: 960px) {
   .ps-layout { grid-template-columns: 1fr 360px; gap: 1.6rem; }
 }
+
+/* ---------- Certificado descargable ---------- */
+.cert-modal { width: min(780px, 100%); }
+.cert-preview { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 0.6rem; margin-bottom: 1.1rem; }
+.cert-preview img { width: 100%; display: block; border-radius: 10px; box-shadow: var(--shadow-sm); }
+.cert-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+.cert-actions .btn { flex: 1; min-width: 200px; }
+.ps-cert-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap;
+  background: var(--grad-accent); color: #6b4300;
+  font-weight: 800; font-size: 0.78rem; padding: 0.45rem 1rem; border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.ps-cert-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(245, 158, 11, 0.45); }
 
 /* ---------- Responsive: tablet ---------- */
 @media (min-width: 640px) {

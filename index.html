@@ -368,6 +368,7 @@
       <div class="ps-progress-box">
         <div class="ps-progress-bar" aria-hidden="true"><span id="psProgress"></span></div>
         <span class="ps-progress-text" id="psProgressText">0% completado</span>
+        <button class="ps-cert-btn" id="psCertBtn" hidden>🎓 Certificado</button>
       </div>
     </header>
 
@@ -429,6 +430,33 @@
       <ul class="curriculum" id="detailCurriculum"></ul>
 
       <div class="detail-foot" id="detailFoot"></div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL DE CERTIFICADO ================= -->
+  <div class="modal-overlay" id="certOverlay" hidden>
+    <div class="modal cert-modal" role="dialog" aria-modal="true" aria-labelledby="certTitle">
+      <button class="modal-close" data-close-modal aria-label="Cerrar certificado">×</button>
+
+      <div class="modal-head">
+        <span class="modal-emoji" aria-hidden="true">🎓</span>
+        <h3 id="certTitle">¡Capacitación completada!</h3>
+        <p>Escribí tu nombre, mirá la vista previa y descargá tu certificado. Se genera en tu propio dispositivo.</p>
+      </div>
+
+      <div class="field">
+        <label for="certName">Nombre del titular *</label>
+        <input type="text" id="certName" autocomplete="name" placeholder="Ej.: María González" />
+        <small class="err">Ingresá tu nombre (mínimo 3 letras).</small>
+      </div>
+
+      <div class="cert-preview"><img id="certImg" alt="Vista previa del certificado" /></div>
+
+      <div class="cert-actions">
+        <button class="btn btn-outline" id="certRegen">🔄 Refrescar vista previa</button>
+        <button class="btn btn-primary" id="certDownload">⬇ Descargar certificado (PNG)</button>
+      </div>
+      <p class="form-note">🔒 Demo: el certificado se genera en tu navegador y no se envía a ningún servidor.</p>
     </div>
   </div>
 
