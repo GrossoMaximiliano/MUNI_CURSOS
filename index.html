@@ -15,32 +15,37 @@
   })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#1d4ed8" />
+  <meta name="theme-color" content="#0b2a4a" />
   <title>Plataforma de Capacitaciones · Municipalidad de Las Toscas</title>
   <meta name="description" content="Clases grabadas y capacitaciones en vivo, gratuitas y con certificado oficial, para vecinos de Las Toscas, Santa Fe. Aprendé a tu ritmo, desde tu celular o PC." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z' fill='%231d4ed8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="img/escudo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <a class="skip-link" href="#cursos">Saltar al catálogo de capacitaciones</a>
 
+  <!-- ================= BARRA INSTITUCIONAL ================= -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a href="https://grossomaximiliano.github.io/MUNI_LAND/">← Sitio oficial de la Municipalidad</a>
+      <span class="topbar-info">
+        <a href="tel:03482492000">📞 (03482) 492-000</a>
+        <span class="hide-sm">Lunes a viernes de 7:00 a 13:00 hs</span>
+      </span>
+    </div>
+  </div>
+
   <!-- ================= HEADER ================= -->
   <header class="site-header" id="siteHeader">
     <div class="container header-inner">
-      <a class="brand" href="#inicio" aria-label="Municipalidad de Las Toscas · Inicio">
-        <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
-          <defs>
-            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#3b82f6" />
-              <stop offset="1" stop-color="#1e3a8a" />
-            </linearGradient>
-          </defs>
-          <path d="M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z" fill="url(#lg)" />
-          <text x="24" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Segoe UI, Arial, sans-serif">LT</text>
-          <path d="M14 32.5c3.2 3.5 6.7 5.6 10 6.6 3.3-1 6.8-3.1 10-6.6" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round" />
-        </svg>
+      <a class="brand" href="#inicio" aria-label="Municipalidad de Las Toscas · Plataforma de Capacitaciones">
+        <img class="brand-logo" src="img/escudo.png" alt="" width="48" height="48" />
         <span class="brand-text">
-          <span class="brand-top">Municipalidad de Las Toscas</span>
+          <span class="brand-small">Municipalidad de</span>
+          <span class="brand-top">Las Toscas</span>
           <span class="brand-sub">Plataforma de Capacitaciones</span>
         </span>
       </a>
@@ -65,6 +70,7 @@
   <main id="main">
     <!-- ================= HERO ================= -->
     <section class="hero" id="inicio">
+      <img class="hero-photo" src="img/hero-capacitacion.jpg" alt="" aria-hidden="true" />
       <div class="hero-blobs" aria-hidden="true">
         <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
       </div>
@@ -140,7 +146,7 @@
     <section class="section continue-section" id="continuar">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">👨‍🎓 Tu aprendizaje</span>
+          <span class="eyebrow">Tu aprendizaje</span>
           <h2>Continuar <span class="highlight">aprendiendo</span></h2>
           <p>Retomá tus capacitaciones justo donde las dejaste. La plataforma recuerda tu avance.</p>
         </div>
@@ -152,7 +158,7 @@
     <section class="section" id="cursos">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">📚 Catálogo 2026</span>
+          <span class="eyebrow">Catálogo 2026</span>
           <h2>Elegí tu próxima <span class="highlight">capacitación</span></h2>
           <p>Clases grabadas para mirar cuando quieras y capacitaciones en vivo con fecha. Todo gratuito y con certificado.</p>
         </div>
@@ -190,7 +196,7 @@
     <section class="section pasos-section" id="pasos">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">🚀 Simple y sin vueltas</span>
+          <span class="eyebrow">Simple y sin vueltas</span>
           <h2>Así <span class="highlight">funciona</span></h2>
           <p>Pensado para aprender desde el celular, en tu casa y a tu ritmo.</p>
         </div>
@@ -222,7 +228,7 @@
     <section class="section" id="preguntas">
       <div class="container container-narrow">
         <div class="section-head reveal">
-          <span class="eyebrow">❓ Preguntas frecuentes</span>
+          <span class="eyebrow">Preguntas frecuentes</span>
           <h2>Resolvemos tus <span class="highlight">dudas</span></h2>
           <p>Si tenés otra consulta, escribinos por WhatsApp o acercate a la Sede Municipal.</p>
         </div>
@@ -290,23 +296,15 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="footer" id="contacto">
+    <div class="footer-flag" aria-hidden="true"></div>
     <div class="container footer-grid">
       <div class="f-col f-brand">
         <a class="brand" href="#inicio" aria-label="Volver arriba">
-          <svg viewBox="0 0 48 48" width="38" height="38" aria-hidden="true">
-            <defs>
-              <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#3b82f6" />
-                <stop offset="1" stop-color="#1e3a8a" />
-              </linearGradient>
-            </defs>
-            <path d="M24 2 6 9v14c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 2z" fill="url(#lg2)" />
-            <text x="24" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Segoe UI, Arial, sans-serif">LT</text>
-            <path d="M14 32.5c3.2 3.5 6.7 5.6 10 6.6 3.3-1 6.8-3.1 10-6.6" fill="none" stroke="#fbbf24" stroke-width="2.4" stroke-linecap="round" />
-          </svg>
+          <img class="brand-logo" src="img/escudo.png" alt="" width="48" height="48" />
           <span class="brand-text">
-            <span class="brand-top">Municipalidad de Las Toscas</span>
-            <span class="brand-sub">Santa Fe · Argentina</span>
+            <span class="brand-small">Municipalidad de</span>
+            <span class="brand-top">Las Toscas</span>
+            <span class="brand-sub">Provincia de Santa Fe</span>
           </span>
         </a>
         <p class="f-desc">Plataforma municipal de formación laboral: clases grabadas y capacitaciones en vivo, gratuitas y con certificado oficial.</p>
@@ -335,17 +333,17 @@
       <div class="f-col">
         <h4>Contacto</h4>
         <ul class="f-contact">
-          <li><span aria-hidden="true">📍</span> Sede Municipal · Centro Cívico, Las Toscas, Santa Fe</li>
-          <li><span aria-hidden="true">📞</span> (03482) 40-2000 <em>(línea demo)</em></li>
-          <li><span aria-hidden="true">✉️</span> capacitaciones@lastoscas.gob.ar</li>
-          <li><span aria-hidden="true">🕗</span> Lunes a viernes · 8 a 13 h</li>
+          <li><span aria-hidden="true">📍</span> Palacio Municipal · Calle 12 N° 901, Las Toscas, Santa Fe</li>
+          <li><span aria-hidden="true">📞</span> (03482) 492-000</li>
+          <li><span aria-hidden="true">✉️</span> produccion@lastoscas.gob.ar</li>
+          <li><span aria-hidden="true">🕗</span> Lunes a viernes de 7:00 a 13:00 hs</li>
         </ul>
       </div>
 
       <div class="f-col">
         <h4>Área a cargo</h4>
-        <p class="f-note">Secretaría de Desarrollo Humano y Promoción Local — Área de Empleo y Capacitación.</p>
-        <p class="f-note">Consultá también en la Oficina de Empleo de tu localidad.</p>
+        <p class="f-note">Secretaría de Desarrollo Productivo — Programa municipal de Trabajo y Capacitación.</p>
+        <p class="f-note">Conocé también <a class="f-inline" href="https://grossomaximiliano.github.io/MUNI_EMPLE/">Empleo Local</a> para publicar tu perfil una vez certificado.</p>
       </div>
     </div>
 

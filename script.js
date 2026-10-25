@@ -875,12 +875,22 @@ document.addEventListener("keydown", function (e) {
    propio navegador (sin servidores ni dependencias)
    ============================================================ */
 const certOverlay = $("#certOverlay");
-const certCanvas = document.createElement("canvas");
-certCanvas.width = 1600;
-certCanvas.height = 1131;
-const certCtx = certCanvas.getContext("2d");
+let certCanvas, certCtx;
+function newCertCanvas() {
+  certCanvas = document.createElement("canvas");
+  certCanvas.width = 1600;
+  certCanvas.height = 1131;
+  certCtx = certCanvas.getContext("2d");
+}
+newCertCanvas();
 let CERT = { course: null };
 let certDebounce = null;
+const CERT_LOGO = new Image();
+CERT_LOGO.src = "img/escudo.png";
+let certLogoOk = true;
+CERT_LOGO.onload = function () {
+  if (CERT.course && !certOverlay.hidden) renderCertificate($("#certName").value);
+};
 
 /* Cerrar tocando el fondo oscuro */
 certOverlay.addEventListener("mousedown", function (e) {
@@ -937,27 +947,29 @@ function renderCertificate(name) {
   ctx.fillStyle = "#fffdf6";
   ctx.fillRect(0, 0, W, H);
   let g = ctx.createRadialGradient(130, 100, 10, 130, 100, 430);
-  g.addColorStop(0, "rgba(37,99,235,0.07)"); g.addColorStop(1, "rgba(37,99,235,0)");
+  g.addColorStop(0, "rgba(31,95,168,0.07)"); g.addColorStop(1, "rgba(31,95,168,0)");
   ctx.fillStyle = g; ctx.fillRect(0, 0, 640, 540);
   g = ctx.createRadialGradient(W - 130, H - 100, 10, W - 130, H - 100, 430);
-  g.addColorStop(0, "rgba(245,158,11,0.09)"); g.addColorStop(1, "rgba(245,158,11,0)");
+  g.addColorStop(0, "rgba(201,162,39,0.09)"); g.addColorStop(1, "rgba(201,162,39,0)");
   ctx.fillStyle = g; ctx.fillRect(W - 640, H - 540, 640, 540);
 
   // Marcos doble (azul + dorado) con diamantes en las esquinas
-  ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 10;
+  ctx.strokeStyle = "#0b2a4a"; ctx.lineWidth = 10;
   certRoundRect(34, 34, W - 68, H - 68, 26); ctx.stroke();
-  ctx.strokeStyle = "rgba(217,161,59,0.9)"; ctx.lineWidth = 2.5;
+  ctx.strokeStyle = "rgba(201,162,39,0.9)"; ctx.lineWidth = 2.5;
   certRoundRect(58, 58, W - 116, H - 116, 18); ctx.stroke();
   [[58, 58], [W - 58, 58], [58, H - 58], [W - 58, H - 58]].forEach(function (p) {
     ctx.save(); ctx.translate(p[0], p[1]); ctx.rotate(Math.PI / 4);
-    ctx.fillStyle = "#f59e0b"; ctx.fillRect(-7, -7, 14, 14); ctx.restore();
+    ctx.fillStyle = "#c9a227"; ctx.fillRect(-7, -7, 14, 14); ctx.restore();
   });
 
-  // Escudo municipal
-  (function () {
+  // Escudo municipal oficial (si la imagen no está disponible, se dibuja uno simplificado)
+  if (certLogoOk && CERT_LOGO.complete && CERT_LOGO.naturalWidth) {
+    ctx.drawImage(CERT_LOGO, cx - 78, 168 - 78, 156, 156);
+  } else (function () {
     const s = 58, sx = cx, sy = 168;
     const grad = ctx.createLinearGradient(sx - 50, sy - 70, sx + 50, sy + 70);
-    grad.addColorStop(0, "#3b82f6"); grad.addColorStop(1, "#12275c");
+    grad.addColorStop(0, "#1f5fa8"); grad.addColorStop(1, "#071d35");
     ctx.beginPath();
     ctx.moveTo(sx, sy - s);
     ctx.lineTo(sx + s * 0.85, sy - s * 0.6);
@@ -967,77 +979,86 @@ function renderCertificate(name) {
     ctx.lineTo(sx - s * 0.85, sy - s * 0.6);
     ctx.closePath();
     ctx.fillStyle = grad; ctx.fill();
-    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 3; ctx.stroke();
+    ctx.strokeStyle = "#e0bd4a"; ctx.lineWidth = 3; ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(sx - 32, sy + 24);
     ctx.quadraticCurveTo(sx, sy + 50, sx + 32, sy + 24);
-    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 4; ctx.stroke();
+    ctx.strokeStyle = "#e0bd4a"; ctx.lineWidth = 4; ctx.stroke();
     certText("LT", sx, sy + 12, "700 32px Georgia, serif", "#ffffff", "center", 1);
   })();
 
   // Encabezado
-  certText("MUNICIPALIDAD DE LAS TOSCAS", cx, 292, "800 36px 'Segoe UI', Arial, sans-serif", "#0f2a6b", "center", 4);
-  certText("SANTA FE · ARGENTINA", cx, 324, "600 20px 'Segoe UI', Arial, sans-serif", "#5b6b83", "center", 6);
-  ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 2;
+  certText("MUNICIPALIDAD DE LAS TOSCAS", cx, 292, "800 36px Montserrat, 'Segoe UI', Arial, sans-serif", "#0b2a4a", "center", 4);
+  certText("SANTA FE · ARGENTINA", cx, 324, "600 20px Montserrat, 'Segoe UI', Arial, sans-serif", "#5c6a7e", "center", 6);
+  ctx.strokeStyle = "#c9a227"; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.moveTo(cx - 150, 352); ctx.lineTo(cx + 150, 352); ctx.stroke();
   ctx.save(); ctx.translate(cx, 352); ctx.rotate(Math.PI / 4);
-  ctx.fillStyle = "#f59e0b"; ctx.fillRect(-6, -6, 12, 12); ctx.restore();
+  ctx.fillStyle = "#c9a227"; ctx.fillRect(-6, -6, 12, 12); ctx.restore();
 
   // Título
-  certText("CERTIFICADO", cx, 452, "800 88px Georgia, 'Times New Roman', serif", "#0f2a6b", "center", 10);
-  certText("DE FINALIZACIÓN", cx, 498, "700 30px 'Segoe UI', Arial, sans-serif", "#1d4ed8", "center", 8);
-  certText("Se certifica que", cx, 556, "italic 400 28px Georgia, serif", "#5b6b83", "center", 1);
+  certText("CERTIFICADO", cx, 452, "800 88px Georgia, 'Times New Roman', serif", "#0b2a4a", "center", 10);
+  certText("DE FINALIZACIÓN", cx, 498, "700 30px Montserrat, 'Segoe UI', Arial, sans-serif", "#1f5fa8", "center", 8);
+  certText("Se certifica que", cx, 556, "italic 400 28px Georgia, serif", "#5c6a7e", "center", 1);
 
   // Nombre del titular (con filete dorado debajo)
   const nombre = (name && name.trim().length >= 3 ? name : "Nombre y Apellido").toUpperCase();
   certCtx.font = "700 64px Georgia, serif";
   const nLines = certWrap(nombre, 1240).slice(0, 2);
   let ny = 628;
-  nLines.forEach(function (l) { certText(l, cx, ny, "700 64px Georgia, serif", "#0f172a"); ny += 72; });
+  nLines.forEach(function (l) { certText(l, cx, ny, "700 64px Georgia, serif", "#1a2433"); ny += 72; });
   const fy = ny - 44;
   const fg = ctx.createLinearGradient(cx - 280, 0, cx + 280, 0);
-  fg.addColorStop(0, "rgba(245,158,11,0)"); fg.addColorStop(0.5, "#f59e0b"); fg.addColorStop(1, "rgba(245,158,11,0)");
+  fg.addColorStop(0, "rgba(201,162,39,0)"); fg.addColorStop(0.5, "#c9a227"); fg.addColorStop(1, "rgba(201,162,39,0)");
   ctx.strokeStyle = fg; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.moveTo(cx - 280, fy); ctx.lineTo(cx + 280, fy); ctx.stroke();
 
   // Capacitación
   let y = fy + 58;
-  certText("completó satisfactoriamente la capacitación", cx, y, "italic 26px Georgia, serif", "#5b6b83");
+  certText("completó satisfactoriamente la capacitación", cx, y, "italic 26px Georgia, serif", "#5c6a7e");
   y += 56;
-  certCtx.font = "800 42px 'Segoe UI', Arial, sans-serif";
+  certCtx.font = "800 42px Montserrat, 'Segoe UI', Arial, sans-serif";
   certWrap(c.title, 1220).slice(0, 2).forEach(function (l) {
-    certText(l, cx, y, "800 42px 'Segoe UI', Arial, sans-serif", "#1d4ed8");
+    certText(l, cx, y, "800 42px Montserrat, 'Segoe UI', Arial, sans-serif", "#1f5fa8");
     y += 50;
   });
   y += 2;
   const horas = c.modality === "En vivo" ? c.duration : c.lessons + " clases · " + c.duration;
-  certText("Nivel " + c.level + "  ·  " + horas + "  ·  Modalidad " + (c.modality === "En vivo" ? "en vivo" : "a tu ritmo"), cx, y, "600 23px 'Segoe UI', Arial, sans-serif", "#5b6b83");
+  certText("Nivel " + c.level + "  ·  " + horas + "  ·  Modalidad " + (c.modality === "En vivo" ? "en vivo" : "a tu ritmo"), cx, y, "600 23px Montserrat, 'Segoe UI', Arial, sans-serif", "#5c6a7e");
 
   // Pie: fecha · sello · firma
   const fecha = "Las Toscas, " + new Date().toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
-  certText(fecha, 150, H - 148, "italic 24px Georgia, serif", "#5b6b83", "left");
+  certText(fecha, 150, H - 148, "italic 24px Georgia, serif", "#5c6a7e", "left");
 
   (function () {
     const sx = cx, sy = H - 168, r = 82;
     ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 5; ctx.stroke();
+    ctx.strokeStyle = "#c9a227"; ctx.lineWidth = 5; ctx.stroke();
     ctx.beginPath(); ctx.arc(sx, sy, r - 9, 0, Math.PI * 2);
-    ctx.fillStyle = "#1e3a8a"; ctx.fill();
+    ctx.fillStyle = "#0b2a4a"; ctx.fill();
     ctx.beginPath(); ctx.arc(sx, sy, r - 24, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(251,191,36,0.85)"; ctx.lineWidth = 1.5; ctx.stroke();
-    certText("★", sx, sy - 14, "34px Georgia, serif", "#fbbf24", "center");
-    certText("LAS TOSCAS", sx, sy + 14, "800 13px 'Segoe UI', Arial", "#ffffff", "center", 2);
-    certText("SANTA FE", sx, sy + 34, "700 11px 'Segoe UI', Arial", "rgba(255,255,255,0.85)", "center", 2);
+    ctx.strokeStyle = "rgba(224,189,74,0.85)"; ctx.lineWidth = 1.5; ctx.stroke();
+    certText("★", sx, sy - 14, "34px Georgia, serif", "#e0bd4a", "center");
+    certText("LAS TOSCAS", sx, sy + 14, "800 13px Montserrat, 'Segoe UI', Arial", "#ffffff", "center", 2);
+    certText("SANTA FE", sx, sy + 34, "700 11px Montserrat, 'Segoe UI', Arial", "rgba(255,255,255,0.85)", "center", 2);
   })();
 
   ctx.strokeStyle = "#9aa9c4"; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(W - 460, H - 170); ctx.lineTo(W - 150, H - 170); ctx.stroke();
-  certText("Secretaría de Desarrollo Humano", W - 305, H - 140, "700 20px 'Segoe UI', Arial", "#0f172a");
-  certText("y Promoción Local", W - 305, H - 114, "600 17px 'Segoe UI', Arial", "#5b6b83");
+  certText("Secretaría de Desarrollo Productivo", W - 305, H - 140, "700 20px Montserrat, 'Segoe UI', Arial", "#1a2433");
+  certText("Municipalidad de Las Toscas", W - 305, H - 114, "600 17px Montserrat, 'Segoe UI', Arial", "#5c6a7e");
 
-  certText("Código de verificación: " + certCode(c, name) + "  ·  Capacita Las Toscas (demo)", cx, H - 62, "600 18px 'Segoe UI', Arial", "#8ba1c9", "center", 1);
+  certText("Código de verificación: " + certCode(c, name) + "  ·  Capacita Las Toscas (demo)", cx, H - 62, "600 18px Montserrat, 'Segoe UI', Arial", "#8ba1c9", "center", 1);
 
-  $("#certImg").src = certCanvas.toDataURL("image/png");
+  try {
+    $("#certImg").src = certCanvas.toDataURL("image/png");
+  } catch (err) {
+    // Abriendo el archivo local (file://) el navegador bloquea exportar un canvas con imágenes:
+    // se vuelve a dibujar en un canvas nuevo sin el escudo para que el certificado siempre se pueda descargar.
+    if (!certLogoOk) return;
+    certLogoOk = false;
+    newCertCanvas();
+    renderCertificate(name);
+  }
 }
 
 function openCertificate(courseId) {
